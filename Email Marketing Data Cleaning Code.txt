@@ -1,0 +1,41 @@
+setwd("C:/Users/mblais/Desktop/Data Visualizations/Email Marketing Evaluation")
+
+Email.Marketing.WORK <- read.csv("C:/Users/mblais/Desktop/Data Visualizations/Email Marketing Evaluation/Email Marketing WORK.csv")
+
+df1 <- Email.Marketing.WORK
+
+require(Hmisc)
+
+df1$appcategory <- df1$Age.at.app
+df1$inqcategory <- df1$Age.at.crtd
+df1$stagework <- df1$Student.Stage
+
+df1$appcategory <- as.numeric(df1$appcategory)
+df1$inqcategory <- as.numeric(df1$inqcategory)
+df1$stagework <- as.numeric(df1$stagework)
+
+df1$appcategory[df1$appcategory > 55] <- NA
+df1$appcategory[df1$appcategory <= 18] <- "High School"
+df1$appcategory[df1$appcategory > 18 & df1$appcategory <= 24] <- "Current Undergraduate"
+df1$appcategory[df1$appcategory > 24 & df1$appcategory <= 55] <- "Working Adult"
+df1$appcategory[is.na(df1$appcategory)] <- 0
+
+df1$inqcategory[df1$inqcategory > 55] <- NA
+df1$inqcategory[df1$inqcategory <= 18] <- "High School"
+df1$inqcategory[df1$inqcategory > 18 & df1$inqcategory <= 24] <- "Current Undergraduate"
+df1$inqcategory[df1$inqcategory > 24 & df1$inqcategory <= 55] <- "Working Adult"
+df1$stagework[is.na(df1$stagework)] <- 0
+df1$inqcategory[df1$stagework >= 0 & df1$stagework < 3] <- NA
+
+df1$leadcategory <- df1$inqcategory
+
+df1$leadcategory[df1$stagework < 5] <- NA
+df1$inqcategory[df1$stagework > 4] <- NA
+df1$inqcategory[is.na(df1$inqcategory)] <- 0
+df1$leadcategory[is.na(df1$leadcategory)] <- 0
+
+describe(df1$appcategory)
+describe(df1$inqcategory)
+describe(df1$leadcategory)
+
+write.csv(df1, "C:\\Users\\mblais\\Desktop\\Data Visualizations\\Email Marketing Evaluation\\Email_Eval_Cleaned.csv",  row.names=FALSE)
